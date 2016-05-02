@@ -5,7 +5,6 @@
  */
 package test;
 
-import java.io.Serializable;
 
 /**
  *
@@ -16,6 +15,6 @@ public class main {
         SimpleIO sio=new SimpleIO("test.txt");
         sio.write("hello,world");
         String str=sio.readAsString();
-        System.err.println(str);
+        System.out.println(str);
     }
 }
