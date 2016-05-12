@@ -303,6 +303,7 @@ public class SimpleIO {
      */
     public void write(InputStream is){
         BufferedOutputStream bos=null;
+        make(mFile);
         try {
             byte[] bytes=new byte[1024];
             bos = new BufferedOutputStream(new FileOutputStream(mFile));
@@ -339,12 +340,11 @@ public class SimpleIO {
      * 将文件拷贝至另一个文件
      * @param toFile
      */
-    public void copyToFile(File toFile){
-        if(!mFile.getAbsolutePath().equals(toFile.getAbsolutePath())){
-            make(toFile);
+    public void copyFromFile(File fromFile){
+        if(!mFile.getAbsolutePath().equals(fromFile.getAbsolutePath())){
             BufferedInputStream bis=null;
             try {
-                bis=new BufferedInputStream(new FileInputStream(mFile));
+                bis=new BufferedInputStream(new FileInputStream(fromFile));
                 write(bis);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(SimpleIO.class.getName()).log(Level.SEVERE, null, ex);
