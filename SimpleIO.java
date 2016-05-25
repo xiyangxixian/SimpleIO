@@ -139,10 +139,15 @@ public class SimpleIO {
     public static byte[] readAsByte(InputStream is){
         byte[] bytes=new byte[0];
         BufferedInputStream bis=null;
+        ByteArrayOutputStream bos = null;
         try {
             bis=new BufferedInputStream(is);
-            bytes=new byte[bis.available()];
-            bis.read(bytes);
+            bos=new ByteArrayOutputStream();
+            bytes=new byte[1024];
+            int len;
+            while((len=bis.read(bytes))!=-1){
+                bos.write(bytes, 0, len);
+            }
         } catch (IOException ex) {
             Logger.getLogger(SimpleIO.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
@@ -153,8 +158,15 @@ public class SimpleIO {
                     Logger.getLogger(SimpleIO.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            if(bos!=null){
+                try {
+                    bos.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(SimpleIO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
-        return bytes;
+        return bos.toByteArray();
     }
     
     /**
@@ -376,5 +388,32 @@ public class SimpleIO {
                 Logger.getLogger(SimpleIO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public static File getFile(File file){
+        File parentFile=file.getParentFile();
+        if(parentFile==null){
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(SimpleIO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return file;
+        }
+        if(!file.getParentFile().exists()){
+            try {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(SimpleIO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else if(!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(SimpleIO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return file;
     }
 }
